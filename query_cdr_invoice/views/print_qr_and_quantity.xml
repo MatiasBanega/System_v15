@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <template id="report_invoice_document_qr" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <img t-if="not extra_edi_vals" class="border border-dark rounded" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.create_data_qr_code(), 100, 100)"/>
+            </xpath>
+
+        </template>
+
+        <template id="report_invoice_document_amount" inherit_id="l10n_pe_edi.report_invoice_document">
+            <xpath expr="//p/span/t" position="replace">
+                 <t t-if="extra_edi_vals.get('amount_to_text')" t-esc="extra_edi_vals.get('amount_to_text')"/>
+                 <t t-if="not extra_edi_vals.get('amount_to_text')" t-esc="o._amount_to_text()"/>
+            </xpath>
+        </template>
+    </data>
+
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_form_view_inherit_query_cdr_invoice" model="ir.ui.view">
+        <field name="name">account.move.form.view.inherit.query_cdr_invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='edi_state']" position="replace">
+                <label for="edi_state"
+                       attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
+                <div class="o_row"
+                     attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}">
+                    <field name="edi_state"/>
+                    <button name="get_query_cdr_invoice" type="object"
+                            string="Consultar CDR"
+                            class="oe_link"
+                            groups="account.group_account_invoice"
+                            attrs="{'invisible': [('edi_state', '!=', 'to_send')]}"
+                    />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
