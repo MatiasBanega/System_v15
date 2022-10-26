@@ -2,3 +2,8 @@
 	path = BecaOdoo/modules
 	url = git@github.com:BecaOdoo/modules.git
 	branch = main
+
+[submodule "odoo/odoo"]
+	path = odoo/odoo
+	url = git@github.com:odoo/odoo.git
+	branch = 15.0
