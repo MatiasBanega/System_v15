@@ -12,3 +12,8 @@
 	path = OCA/server-ux
 	url = git@github.com:OCA/server-ux.git
 	branch = 15.0
+
+[submodule "CybroOdoo/CybroAddons"]
+	path = CybroOdoo/CybroAddons
+	url = git@github.com:CybroOdoo/CybroAddons.git
+	branch = 15.0
