@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+
+    <template id="pe_ubl_2_1_debit_note_body_inherit_l10n_pe_edocument_rectifying" inherit_id="l10n_pe_edi.pe_ubl_2_1_debit_note_body">
+        <xpath expr="//*[name()='cac:BillingReference']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:BillingReference>
+                    <cac:InvoiceDocumentReference t-if="record.origin_number">
+                        <cbc:ID t-esc="record.origin_number"/>
+                        <cbc:DocumentTypeCode t-esc="record.origin_l10n_latam_document_type_id.code"/>
+                    </cac:InvoiceDocumentReference>
+                </cac:BillingReference>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pe_ubl_2_1_refund_body_inherit_l10n_pe_edocument_rectifying" inherit_id="l10n_pe_edi.pe_ubl_2_1_refund_body">
+        <xpath expr="//*[name()='cac:BillingReference']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:BillingReference>
+                    <cac:InvoiceDocumentReference t-if="record.origin_number">
+                        <cbc:ID t-esc="record.origin_number"/>
+                        <cbc:DocumentTypeCode t-esc="record.origin_l10n_latam_document_type_id.code"/>
+                    </cac:InvoiceDocumentReference>
+                </cac:BillingReference>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_form_view_inherit_l10n_pe_advance_global_discount" model="ir.ui.view">
+        <field name="name">account.move.form.view.inherit.l10n_pe_advance_global_discount</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="before">
+                <field name="l10n_pe_advance_invoice" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']" position="before">
+                <field name="l10n_pe_advance_invoice" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='agent_retention']" position="before">
+                <field name="multiplier_factor_field" invisible="1"/>
+                <field name="amount_field_advance" invisible="1"/>
+                <field name="debit_field_advance" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

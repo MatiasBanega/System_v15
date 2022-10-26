@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_form_view_inherit_l10n_pe_edocument_rectifying" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_pe_edi.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_pe_edi_refund_reason']" position="replace">
+                <field name="l10n_pe_edi_refund_reason" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('l10n_pe_sunat_code', 'not in', ['07', '08'])]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

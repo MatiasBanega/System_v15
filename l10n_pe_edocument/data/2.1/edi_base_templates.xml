@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+
+    <template id="pe_ubl_2_1_common_line_inherit_l10n_pe_edocument" inherit_id="l10n_pe_edi.pe_ubl_2_1_common_line">
+        <xpath expr="//*[name()='cac:PricingReference']/*[name()='cac:AlternativeConditionPrice']/*[name()='cbc:PriceAmount']"
+               position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund'">
+                    <cbc:PriceAmount t-att-currencyID="line.currency_id.name">0.000000</cbc:PriceAmount>
+                </t>
+                <t t-else="">
+                    <cbc:PriceAmount t-att-currencyID="line.currency_id.name"
+                        t-esc="format_float(line_vals['price_total_unit'], 6)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:Price']/*[name()='cbc:PriceAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund'">
+                    <cbc:PriceAmount t-att-currencyID="line.currency_id.name">0.000000</cbc:PriceAmount>
+                </t>
+                <t t-else="">
+                    <cbc:PriceAmount t-att-currencyID="line.currency_id.name"
+                        t-esc="format_float(line_vals['price_subtotal_unit'], 6)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxCategory']/*[name()='cbc:Percent']" position="replace">
+            <!-- GRA - Gratuito -->
+            <t t-if="line_vals['price_unit_type_code'] == '02' "
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="tax.l10n_pe_edi_affectation_reason != '11' ">
+                    <cbc:Percent t-esc="0.0"/>
+                </t>
+                <!-- Gravado - Retiro por premio - 11 -->
+                <t t-if="tax.l10n_pe_edi_affectation_reason == '11' ">
+                    <cbc:Percent t-if="tax.amount_type == 'percent'" t-esc="tax.amount"/>
+                </t>
+            </t>
+            <t t-if="line_vals['price_unit_type_code'] != '02' "
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:Percent t-if="tax.amount_type == 'percent'" t-esc="tax.amount"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxTotal']/*[name()='cbc:TaxAmount']" position="replace">
+            <t t-if="line_vals['price_unit_type_code'] == '02' and not(line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund')"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:TaxAmount t-att-currencyID="line.currency_id.name" t-esc="0.00"/>
+            </t>
+            <t t-if="line_vals['price_unit_type_code'] != '02' and not(line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund')"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:TaxAmount t-att-currencyID="line.currency_id.name" t-esc="format_float(line.price_total - line.price_subtotal)"/>
+            </t>
+            <t t-if="line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund'">
+                <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:TaxAmount t-att-currencyID="line.currency_id.name">0.00</cbc:TaxAmount>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxSubtotal']/*[name()='cbc:TaxableAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund'">
+                    <cbc:TaxableAmount t-if="tax.tax_group_id.l10n_pe_edi_code != 'ICBPER'" t-att-currencyID="line.currency_id.name">0.00</cbc:TaxableAmount>
+                </t>
+                <t t-else="">
+                    <cbc:TaxableAmount
+                        t-if="tax.tax_group_id.l10n_pe_edi_code != 'ICBPER'"
+                        t-att-currencyID="line.currency_id.name"
+                        t-esc="format_float(balance_multiplicator * tax_detail_vals['base_amount_currency'])"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxSubtotal']/*[name()='cbc:TaxAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund'">
+                    <cbc:TaxAmount t-att-currencyID="line.currency_id.name">0.00</cbc:TaxAmount>
+                </t>
+                <t t-else="">
+                    <cbc:TaxAmount
+                        t-att-currencyID="line.currency_id.name"
+                        t-esc="format_float(balance_multiplicator * tax_detail_vals['tax_amount_currency'] or 0.0)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cbc:TaxExemptionReasonCode']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:TaxExemptionReasonCode t-if="tax.tax_group_id.l10n_pe_edi_code != 'ICBPER' and tax.l10n_pe_edi_affectation_reason"
+                    t-esc="tax.l10n_pe_edi_affectation_reason"/>
+                <cbc:TierRange t-if="tax.tax_group_id.l10n_pe_edi_code == 'ISC' and tax.isc_calculation_system_id"
+                    t-esc="tax.isc_calculation_system_id.code or ''"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[name()='cbc:LineExtensionAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="line.move_id.l10n_pe_edi_refund_reason == '13' and line.move_id.move_type == 'out_refund'">
+                    <cbc:LineExtensionAmount t-att-currencyID="line.currency_id.name">0.00</cbc:LineExtensionAmount>
+                </t>
+                <t t-else="">
+                    <cbc:LineExtensionAmount t-att-currencyID="line.currency_id.name" t-esc="format_float(line.price_subtotal)"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pe_ubl_2_1_invoice_common_allowance_inherit_l10n_pe_edocument"
+              inherit_id="l10n_pe_edi.pe_ubl_2_1_common">
+        <xpath expr="//*[name()='cac:TaxTotal']/*[name()='cbc:TaxAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="record.l10n_pe_edi_refund_reason == '13' and record.move_type == 'out_refund'">
+                    <cbc:TaxAmount t-att-currencyID="record.currency_id.name">0.00</cbc:TaxAmount>
+                </t>
+                <t t-else="">
+                    <cbc:TaxAmount t-att-currencyID="record.currency_id.name" t-esc="format_float(total_tax_amount)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxSubtotal']/*[name()='cbc:TaxableAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="record.l10n_pe_edi_refund_reason == '13' and record.move_type == 'out_refund'">
+                    <cbc:TaxableAmount t-att-currencyID="record.currency_id.name">0.00</cbc:TaxableAmount>
+                </t>
+                <t t-else="">
+                    <cbc:TaxableAmount t-att-currencyID="record.currency_id.name" 
+                        t-esc="format_float(balance_multiplicator * tax_detail_vals['base_amount_currency'])"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxSubtotal']/*[name()='cbc:TaxAmount']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="record.l10n_pe_edi_refund_reason == '13' and record.move_type == 'out_refund'">
+                    <cbc:TaxAmount t-att-currencyID="record.currency_id.name">0.00</cbc:TaxAmount>
+                </t>
+                <t t-else="">
+                    <cbc:TaxAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_float(balance_multiplicator * tax_detail_vals['tax_amount_currency'] or 0.0)"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:RegistrationAddress']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:RegistrationAddress>
+                    <t t-if="env.company.partner_id.l10n_pe_district.code">
+                        <cbc:ID t-esc="env.company.partner_id.l10n_pe_district.code"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:ID t-esc="'-'"/>
+                    </t>
+                    <t t-if="env.company.l10n_pe_edi_address_type_code">
+                        <cbc:AddressTypeCode t-esc="env.company.l10n_pe_edi_address_type_code"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:AddressTypeCode t-esc="'-'"/>
+                    </t>
+                    <t t-if="env.company.partner_id.city_id.name">
+                        <cbc:CityName t-esc="env.company.partner_id.city_id.name"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:CityName t-esc="'-'"/>
+                    </t>
+                    <t t-if="env.company.state_id.name">
+                        <cbc:CountrySubentity t-esc="env.company.state_id.name"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:CountrySubentity t-esc="'-'"/>
+                    </t>
+                    <t t-if="env.company.partner_id.l10n_pe_district.name">
+                        <cbc:District t-esc="env.company.partner_id.l10n_pe_district.name"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:District t-esc="'-'"/>
+                    </t>
+                    <cac:AddressLine>
+                        <t t-if="env.company.street_name and env.company.street_number">
+                            <cbc:Line t-esc="str(env.company.street_name) + ' ' + str(env.company.street_number)"/>
+                        </t>
+                        <t t-elif="env.company.street_name and not env.company.street_number">
+                            <cbc:Line t-esc="env.company.street_name"/>
+                        </t>
+                        <t t-else="">
+                            <cbc:Line t-esc="'-'"/>
+                        </t>
+                    </cac:AddressLine>
+
+                    <cac:Country>
+                        <t t-if="env.company.partner_id.country_id.code">
+                            <cbc:IdentificationCode t-esc="env.company.partner_id.country_id.code"/>
+                        </t>
+                        <t t-else="">
+                            <cbc:IdentificationCode t-esc="'-'"/>
+                        </t>
+                    </cac:Country>
+                </cac:RegistrationAddress>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[name()='cac:AccountingCustomerParty']/*[name()='cac:Party']/*[name()='cac:PartyLegalEntity']/*[name()='cbc:RegistrationName']"
+               position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:RegistrationAddress>
+                    <t t-if="record.partner_id.l10n_pe_district.code">
+                        <cbc:ID t-esc="record.partner_id.l10n_pe_district.code"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:ID t-esc="'-'"/>
+                    </t>
+                    <t t-if="record.partner_id.annexed_establishment">
+                        <cbc:AddressTypeCode t-esc="record.partner_id.annexed_establishment"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:AddressTypeCode t-esc="'-'"/>
+                    </t>
+                    <t t-if="record.partner_id.city_id.name">
+                        <cbc:CityName t-esc="record.partner_id.city_id.name"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:CityName t-esc="'-'"/>
+                    </t>
+                    <t t-if="record.partner_id.state_id.name">
+                        <cbc:CountrySubentity t-esc="record.partner_id.state_id.name"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:CountrySubentity t-esc="'-'"/>
+                    </t>
+                    <t t-if="record.partner_id.l10n_pe_district.name">
+                        <cbc:District t-esc="record.partner_id.l10n_pe_district.name"/>
+                    </t>
+                    <t t-else="">
+                        <cbc:District t-esc="'-'"/>
+                    </t>
+                    <cac:AddressLine>
+                        <t t-if="record.partner_id.street_name and record.partner_id.street_number">
+                            <cbc:Line
+                                t-esc="str(record.partner_id.street_name) + ' ' + str(record.partner_id.street_number)"/>
+                        </t>
+                        <t t-elif="record.partner_id.street_name and not record.partner_id.street_number">
+                            <cbc:Line t-esc="record.partner_id.street_name"/>
+                        </t>
+                        <t t-else="">
+                            <cbc:Line t-esc="'-'"/>
+                        </t>
+                    </cac:AddressLine>
+
+                    <cac:Country>
+                        <t t-if="record.partner_id.country_id.code">
+                            <cbc:IdentificationCode t-esc="record.partner_id.country_id.code"/>
+                        </t>
+                        <t t-else="">
+                            <cbc:IdentificationCode t-esc="'-'"/>
+                        </t>
+                    </cac:Country>
+                </cac:RegistrationAddress>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[name()='cac:AccountingCustomerParty']/*[name()='cac:Party']/*[name()='cac:PartyLegalEntity']/*[name()='cbc:RegistrationName']"
+               position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="record.partner_id.parent_id">
+                    <cbc:RegistrationName t-esc="record.partner_id.parent_id.name + ', ' + record.partner_id.name"/>
+                </t>
+                <t t-else="">
+                    <cbc:RegistrationName t-esc="record.partner_id.name"/>
+                </t>
+            </t>
+        </xpath>
+
+        <xpath expr="//*[name()='cac:OrderReference']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:OrderReference t-if="record.ref and record.l10n_latam_document_type_id.internal_type == 'invoice'">
+                    <cbc:ID t-esc="str(record.ref).replace(' ','')[:20]"/>
+                </cac:OrderReference>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

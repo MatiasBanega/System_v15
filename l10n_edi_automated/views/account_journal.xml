@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_journal_form_view_inherit_l10n_edi_automated" model="ir.ui.view">
+        <field name="name">account.journal.form.view.inherit.l10n_edi_automated</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_latam_use_documents']" position="after" >
+                <field name="automated_sent" attrs="{'invisible':[('l10n_latam_use_documents', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

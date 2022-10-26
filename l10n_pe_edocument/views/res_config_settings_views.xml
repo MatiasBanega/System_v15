@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_form_view_inherit_l10n_pe_edocument" model="ir.ui.view">
+        <field name="name">res.config.settings.form.view.inherit.l10n_pe_edocument</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_pe_edi_test_env']" position="replace">
+                <field name="l10n_pe_edi_test_env"/>
+            </xpath>
+            <xpath expr="//div[@id='invoicing_peruvian_settings']/div/div/label[@for='l10n_pe_edi_certificate_id']/parent::div/parent::div/parent::div" position="after">
+                <div class="row mt16 o_settings_container" id="invoicing_peruvian_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('l10n_pe_edi_provider', '!=', 'ose')]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label mt16">OSE WSDL</span>
+                            <div class="content-group">
+                                <div class="row mt32">
+                                    <label for="l10n_pe_edi_provider_ose_prod_wsdl" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_provider_ose_prod_wsdl" attrs="{'required': [('l10n_pe_edi_provider', '=', 'ose')]}"/>
+                                    <label for="l10n_pe_edi_provider_ose_test_wsdl" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_provider_ose_test_wsdl" attrs="{'required': [('l10n_pe_edi_provider', '=', 'ose')]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

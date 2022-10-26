@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+
+    <template id="pe_ubl_2_1_invoice_body_inherit_l10n_pe_edocument" inherit_id="l10n_pe_edi.pe_ubl_2_1_invoice_body">
+        <xpath expr="//*[name()='cac:OrderReference']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <t t-if="not order_reference == ''">
+                    <cac:OrderReference>
+                        <cbc:ID t-esc="order_reference[:20]"/>
+                    </cac:OrderReference>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:LegalMonetaryTotal']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:LegalMonetaryTotal>
+                    <cbc:LineExtensionAmount t-att-currencyID="record.currency_id.name"
+                        t-esc="format_float(line_extension_amount)"/>
+                    <cbc:TaxInclusiveAmount t-att-currencyID="record.currency_id.name"
+                        t-esc="format_float(tax_inclusive_amount)"/>
+                    <cbc:PayableAmount t-att-currencyID="record.currency_id.name"
+                        t-esc="format_float(payable_amount or 0.0)"/>
+                </cac:LegalMonetaryTotal>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pe_ubl_2_1_refund_body_inherit_l10n_pe_edocument" inherit_id="l10n_pe_edi.pe_ubl_2_1_refund_body">
+        <xpath expr="//*[name()='cac:DiscrepancyResponse']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:DiscrepancyResponse t-if="record.l10n_latam_document_type_id.code == '07'">
+                    <cbc:ResponseCode t-esc="record.l10n_pe_edi_refund_reason"/>
+                    <cbc:Description t-esc="record.l10n_pe_edi_cancel_reason"/>
+                </cac:DiscrepancyResponse>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:DiscrepancyResponse']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <t t-if="record.ref and record.move_type in ['out_invoice', 'out_refund']">
+                    <cac:OrderReference>
+                        <cbc:ID t-esc="(str(record.ref)).replace(' ', '')[:20]"/>
+                    </cac:OrderReference>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:AccountingCustomerParty']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+               <t t-if="record.l10n_pe_edi_refund_reason == '13' and record.move_type == 'out_refund'">
+                    <t t-if="PaymentMeansID == 'Contado'">
+                        <cac:PaymentTerms>
+                            <cbc:ID>FormaPago</cbc:ID>
+                            <cbc:PaymentMeansID t-esc="PaymentMeansID"/>
+                        </cac:PaymentTerms>
+                    </t>
+                    <t t-else="">
+                        <cac:PaymentTerms>
+                            <cbc:ID>FormaPago</cbc:ID>
+                            <cbc:PaymentMeansID t-esc="PaymentMeansID"/>
+                            <cbc:Amount t-att-currencyID="record.currency_id.name"
+                                t-esc="format_float(total_after_spot*-1)"/>
+                        </cac:PaymentTerms>
+
+                        <t t-set="id_value" t-value="0"/>
+                        <cac:PaymentTerms t-foreach="invoice_date_due_vals_list" t-as="due_vals">
+                            <t t-set="id_value" t-value="id_value + 1"/>
+                            <cbc:ID>FormaPago</cbc:ID>
+                            <cbc:PaymentMeansID>Cuota<t t-esc="'{0:03d}'.format(id_value)"/></cbc:PaymentMeansID>
+                            <cbc:Amount
+                                t-att-currencyID="due_vals['currency_name']"
+                                t-esc="format_float(due_vals['amount']*-1)"/>
+                            <cbc:PaymentDueDate t-esc="due_vals['date_maturity']"/>
+                        </cac:PaymentTerms>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:LegalMonetaryTotal']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-if="record.l10n_pe_edi_refund_reason == '13' and record.move_type == 'out_refund'">
+                    <cac:LegalMonetaryTotal>
+                        <cbc:LineExtensionAmount t-att-currencyID="record.currency_id.name">0.00</cbc:LineExtensionAmount>
+                        <cbc:TaxInclusiveAmount t-att-currencyID="record.currency_id.name">0.00</cbc:TaxInclusiveAmount>
+                        <cbc:PayableAmount t-att-currencyID="record.currency_id.name">0.00</cbc:PayableAmount>
+                    </cac:LegalMonetaryTotal>
+                </t>
+                <t t-else="">
+                    <cac:LegalMonetaryTotal>
+                        <cbc:LineExtensionAmount t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_untaxed)"/>
+                        <cbc:TaxInclusiveAmount t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_total)"/>
+                        <cbc:PayableAmount t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_total)"/>
+                    </cac:LegalMonetaryTotal>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pe_ubl_2_1_debit_note_body_inherit_l10n_pe_edocument"
+              inherit_id="l10n_pe_edi.pe_ubl_2_1_debit_note_body">
+        <xpath expr="//*[name()='cac:DiscrepancyResponse']" position="replace">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:DiscrepancyResponse t-if="record.l10n_latam_document_type_id.code == '08'">
+                    <cbc:ResponseCode t-esc="record.l10n_pe_edi_charge_reason"/>
+                    <cbc:Description t-esc="record.l10n_pe_edi_cancel_reason"/>
+                </cac:DiscrepancyResponse>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:DiscrepancyResponse']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <t t-if="record.ref and record.move_type in ['out_invoice', 'out_refund']">
+                    <cac:OrderReference>
+                        <cbc:ID t-esc="(str(record.ref)).replace(' ', '')[:20]"/>
+                    </cac:OrderReference>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

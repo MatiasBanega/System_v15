@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_invoice_correction" model="ir.ui.view">
+            <field name="name">account.invoice.correction.form</field>
+            <field name="model">account.invoice.correction</field>
+            <field name="arch" type="xml">
+                <form string="Agregar factura de corrección">
+                    <field name="move_id" invisible="1"/>
+                    <p class="oe_grey">
+                        La factura de corrección se crea en borrador y puede
+                        ser editada antes de expedirse.
+                    </p>
+                    <group>
+                        <group>
+                            <field name="journal_id"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Corregir' name="create_invoice_correction" type="object" class="btn-primary"
+                                data-hotkey="q"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_invoice_correction" model="ir.actions.act_window">
+            <field name="name">Agregar factura de corrección</field>
+            <field name="res_model">account.invoice.correction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_invoice_correction"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+        </record>
+    </data>
+</odoo>
