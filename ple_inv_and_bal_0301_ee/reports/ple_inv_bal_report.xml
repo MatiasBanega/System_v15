@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+            id="action_print_report_pdf"
+            string="Reporte en PDF"
+            model="account.financial.html.report"
+            report_type="qweb-html"
+            name="ple_inv_and_bal_0301_ee.print_head"
+            file="ple_inv_and_bal_0301_ee.print_head"/>
+
+    <record id="ple_inv_and_bal_0301_ee.action_print_report_pdf" model="ir.actions.report">
+    </record>
+
+</odoo>
+

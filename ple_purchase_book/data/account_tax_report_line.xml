@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ple_purchase_08" model="account.tax.report">
+            <field name="name">Resumen Registro de Compras PLE</field>
+            <field name="country_id" ref="base.pe"/>
+        </record>
+
+        <record id="ple_purchase_base_gdg" model="account.tax.report.line">
+            <field name="name">Base Gravada Destino Gravada</field>
+            <field name="tag_name">P_BASE_GDG</field>
+            <field name="code">M08_14</field>
+            <field name="sequence">2</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_tax_gdg" model="account.tax.report.line">
+            <field name="name">Impuesto Gravado Destino Gravado</field>
+            <field name="tag_name">P_TAX_GDG</field>
+            <field name="code">M08_15</field>
+            <field name="sequence">3</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_base_gdm" model="account.tax.report.line">
+            <field name="name">Base Gravada Destino Mixto</field>
+            <field name="tag_name">P_BASE_GDM</field>
+            <field name="code">M08_16</field>
+            <field name="sequence">4</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_tax_gdm" model="account.tax.report.line">
+            <field name="name">Impuesto Gravado Destino Mixto</field>
+            <field name="tag_name">P_TAX_GDM</field>
+            <field name="code">M08_17</field>
+            <field name="sequence">5</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_base_gdnd" model="account.tax.report.line">
+            <field name="name">Base Gravada Destino NO Gravada</field>
+            <field name="tag_name">P_BASE_GDNG</field>
+            <field name="code">M08_18</field>
+            <field name="sequence">6</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_tax_gdnd" model="account.tax.report.line">
+            <field name="name">Impuesto Gravado Destino NO Gravado</field>
+            <field name="tag_name">P_TAX_GDNG</field>
+            <field name="code">M08_19</field>
+            <field name="sequence">7</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_base_ng" model="account.tax.report.line">
+            <field name="name">Compras No Gravadas</field>
+            <field name="tag_name">P_BASE_NG</field>
+            <field name="code">M08_20</field>
+            <field name="sequence">8</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_tax_isc" model="account.tax.report.line">
+            <field name="name">Impuesto Selectivo al Consumo</field>
+            <field name="tag_name">P_TAX_ISC</field>
+            <field name="code">M08_21</field>
+            <field name="sequence">9</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_base_other" model="account.tax.report.line">
+            <field name="name">Otros Conceptos, tributos y cargos</field>
+            <field name="tag_name">P_TAX_OTHER</field>
+            <field name="code">M08_23</field>
+            <field name="sequence">10</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+        <record id="ple_purchase_p_tax_icbp" model="account.tax.report.line">
+            <field name="name">Impuesto consumo de bolsas de plástico</field>
+            <field name="tag_name">P_TAX_ICBP</field>
+            <field name="code">M08_22</field>
+            <field name="sequence">11</field>
+            <field name="report_id" ref="ple_purchase_08"/>
+        </record>
+
+    </data>
+</odoo>

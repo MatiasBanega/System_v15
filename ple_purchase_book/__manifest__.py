@@ -1,0 +1,32 @@
+{
+    'name': 'Electronic Purchase Record',
+    'version': '15.0.0.4.11',
+    'author': 'Ganemo',
+    'website': 'https://www.ganemo.co',
+    'summary': 'Generate your Electronic Purchase Record for PLE SUNAT',
+    'description': 'Create the e-book of Purchases to present to the PLE SUNAT. We always maintain it and keep it updated',
+    'category': 'Accounting',
+    'depends': [
+        'ple_sale_book',
+        'base_spot',
+        'document_in_supplier_invoice',
+        'l10n_pe_catalog',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/queries_data.xml',
+        'data/account_tax_report_line.xml',
+        'data/account_tax_group.xml',
+        'data/account_tax.xml',
+        'data/product_template.xml',
+        'data/tags_autolink.xml',
+        'data/account_move_data.xml',
+        'views/ple_purchase_views.xml',
+        'views/move_views.xml',
+    ],
+    'installable': True,
+    'auto_install': False,
+    'license': 'Other proprietary',
+    'currency': 'USD',
+    'price': 160.00
+}

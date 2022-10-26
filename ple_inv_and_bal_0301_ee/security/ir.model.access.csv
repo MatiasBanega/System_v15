@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_wizard_report_generate_0301_ee,wizard.report.generate.0301.ee,model_wizard_report_generate_0301_ee,account.group_account_user,1,1,1,1

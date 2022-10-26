@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="main_template_inherit" inherit_id="account_reports.main_template">
+            <!-- remueve el encabezado por defecto -->
+            <xpath expr="//div[@class='o_account_reports_header']" position="replace">
+            </xpath>
+        </template>
+    </data>
+</odoo>
