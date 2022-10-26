@@ -1,0 +1,4 @@
+[submodule "BecaOdoo/modules"]
+	path = BecaOdoo/modules
+	url = git@github.com:BecaOdoo/modules.git
+	branch = main
