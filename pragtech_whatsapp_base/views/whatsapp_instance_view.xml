@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_whatsapp_instance_form" model="ir.ui.view">
+        <field name="name">view.whatsapp.instance.form</field>
+        <field name="model">whatsapp.instance</field>
+        <field name="arch" type="xml">
+            <form string="Whatsapp Instance">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" icon="fa-users">
+                        <button name="action_test_connection" type="object" icon="fa-plug" class="oe_stat_button" string="Test Connection"/>
+                        <button class="oe_stat_button" name="action_import_templates" type="object" icon="fa-cloud-download" help="Import Templates"
+                                string="Import Templates"/>
+                        <button class="oe_stat_button" name="action_export_templates" type="object" icon="fa-cloud-upload" help="Export Templates"
+                                string="Export Templates" attrs="{'invisible': [('provider', '=', 'gupshup')]}"/>
+                        <button class="oe_stat_button" name="action_create_missing_templates" type="object" icon="fa-plus"
+                                help="Create Missing Templates"
+                                string="Create Missing Templates"/>
+                        <field string="Enable" name="status" invisible="1"/>
+                        <button class="oe_stat_button" name="action_whatsapp_instance_disable" type="object"
+                                attrs="{'invisible': [('status','=','disable')]}" icon="fa-check-circle" help="Set as Disable" string="Disable">
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="provider" attrs="{'readonly': [('status', '=', 'enable')]}"/>
+                            <field name="whatsapp_endpoint"
+                                   attrs="{'invisible': [('provider', '!=', 'whatsapp_chat_api')], 'readonly': [('status', '=', 'enable')]}"/>
+                            <field name="whatsapp_token" password="True"
+                                   attrs="{'invisible': [('provider', '!=', 'whatsapp_chat_api')], 'readonly': [('status', '=', 'enable')]}"/>
+                            <field name="whatsapp_gupshup_app_name"
+                                   attrs="{'invisible': [('provider', '!=', 'gupshup')], 'readonly': [('status', '=', 'enable')]}"/>
+                            <field name="whatsapp_gupshup_api_key" password="True"
+                                   attrs="{'invisible': [('provider', '!=', 'gupshup')], 'readonly': [('status', '=', 'enable')]}"/>
+                            <field name="gupshup_source_number" widget="phone"
+                                   attrs="{'invisible': [('provider', '!=', 'gupshup')], 'readonly': [('status', '=', 'enable')]}"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="send_whatsapp_through_template"/>
+                            <field name="default_instance"/>
+                            <field name="signature"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='whatsapp_users' string="Connected Users">
+                            <field name="user_ids" readonly="True">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="login"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name='whatsapp_users' string="Connected Companies">
+                            <field name="res_company_ids" readonly="True">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name='whatsapp_templates' string="Whatsapp Templates">
+                            <field name="whatsapp_template_ids" readonly="True">
+                                <tree editable="bottom" decoration-success="approval_state == 'approved' or approval_state == 'APPROVED'" decoration-muted="approval_state == ''" decoration-info="approval_state == 'submitted' or approval_state == 'PENDING'" >
+                                    <field name="name"/>
+                                    <field name="category"/>
+                                    <field name="state"/>
+                                    <field name="approval_state"/>
+                                    <field name="whatsapp_instance_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name='message_configuration' string="Message Configuration">
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_whatsapp_instance_tree" model="ir.ui.view">
+        <field name="name">view.whatsapp.instance.tree</field>
+        <field name="model">whatsapp.instance</field>
+        <field name="arch" type="xml">
+            <tree string="Whatsapp Instance" decoration-success="status == 'enable'" decoration-muted="status == 'disable'">
+                <field name="name"/>
+                <field name="provider" invisible="1"/>
+                <field name="whatsapp_endpoint" attrs="{'invisible': [('provider', '!=', 'whatsapp_chat_api')]}"/>
+                <field name="whatsapp_gupshup_app_name" attrs="{'invisible': [('provider', '!=', 'gupshup')]}"/>
+                <field name="status" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_whatsapp_instance" model="ir.actions.act_window">
+        <field name="name">Whatsapp Instance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">whatsapp.instance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_whatsapp_instance" name="Whatsapp Instance" sequence="9" action="action_whatsapp_instance"
+              parent="main_menu_whatsapp"/>
+
+</odoo>
