@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_whatsapp_connector_connector_form" model="ir.ui.view">
+        <field name="name">acrux.chat.connector.form</field>
+        <field name="model">acrux.chat.connector</field>
+        <field name="inherit_id" ref="whatsapp_connector.view_whatsapp_connector_connector_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='assign_right']" position="inside">
+                <group string="Asign Agent" class="acrux_label_space" colspan="2">
+                    <field name="assing_type" />
+                    <field name="automatic_agent_assign" widget="boolean_toggle"/>
+                    <field name="assign_offline_agent" widget="boolean_toggle" />
+                    <field name="retain_agent" widget="boolean_toggle" />
+                    <field name="assign_commercial" widget="boolean_toggle" />
+                    <field name="team_id" attrs="{'invisible': [('assing_type', '!=', 'crm_team')]}" />
+                    <field name="assing_agent_index" invisible="1" />
+                </group>
+                <group colspan="2" attrs="{'invisible': [('assing_type', '!=', 'connector')]}">
+                    <div class="o_row">
+                        <label for="agent_ids" style="font-weight: bold;"/>
+                        <field name="agent_ids">
+                            <tree editable="bottom">
+                                <field name="name" readonly="1"/>
+                                <field name="acrux_chat_active" readonly="1"/>
+                                <field name="company_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
