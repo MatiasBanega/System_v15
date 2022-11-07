@@ -17,3 +17,8 @@
 	path = CybroOdoo/CybroAddons
 	url = git@github.com:CybroOdoo/CybroAddons.git
 	branch = 15.0
+
+[submodule "BecaOdoo/conector"]
+	path = BecaOdoo/conector
+	url = git@github.com:BecaOdoo/conector.git
+	branch = main
