@@ -22,3 +22,8 @@
 	path = BecaOdoo/conector
 	url = git@github.com:BecaOdoo/conector.git
 	branch = main
+
+[submodule "BecaOdoo/Vistas"]
+	path = BecaOdoo/Vistas
+	url = git@github.com:BecaOdoo/Vistas.git
+	branch = main
