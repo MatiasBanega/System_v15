@@ -27,3 +27,8 @@
 	path = BecaOdoo/Vistas
 	url = git@github.com:BecaOdoo/Vistas.git
 	branch = main
+
+[submodule "BecaOdoo/360"]
+	path = BecaOdoo/360
+	url = git@github.com:BecaOdoo/360.git
+	branch = main
