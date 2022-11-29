@@ -32,3 +32,8 @@
 	path = BecaOdoo/360
 	url = git@github.com:BecaOdoo/360.git
 	branch = main
+
+[submodule "OCA/hr-expense"]
+	path = OCA/hr-expense
+	url = git@github.com:OCA/hr-expense.git
+	branch = 15.0
